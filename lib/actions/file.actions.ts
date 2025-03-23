@@ -218,19 +218,41 @@ export async function getTotalSpaceUsed() {
 
     files.documents.forEach((file) => {
       const fileType = file.type as FileType;
-      totalSpace[fileType].size += file.size;
-      totalSpace.used += file.size;
+      // Convert file size to number to ensure proper calculation
+      const fileSize = typeof file.size === 'string' ? parseInt(file.size) : Number(file.size);
+      
+      if (fileType && totalSpace[fileType]) {
+        totalSpace[fileType].size += fileSize;
+      } else {
+        totalSpace.other.size += fileSize;
+      }
+      
+      // Add to total used space
+      totalSpace.used += fileSize;
 
       if (
-        !totalSpace[fileType].latestDate ||
-        new Date(file.$updatedAt) > new Date(totalSpace[fileType].latestDate)
+        !totalSpace[fileType]?.latestDate ||
+        new Date(file.$updatedAt) > new Date(totalSpace[fileType]?.latestDate || '')
       ) {
-        totalSpace[fileType].latestDate = file.$updatedAt;
+        if (fileType && totalSpace[fileType]) {
+          totalSpace[fileType].latestDate = file.$updatedAt;
+        }
       }
     });
 
+    console.log("Total space used:", totalSpace.used, "bytes");
+    
     return parseStringify(totalSpace);
   } catch (error) {
     handleError(error, "Error calculating total space used:, ");
+    return parseStringify({
+      image: { size: 0, latestDate: "" },
+      document: { size: 0, latestDate: "" },
+      video: { size: 0, latestDate: "" },
+      audio: { size: 0, latestDate: "" },
+      other: { size: 0, latestDate: "" },
+      used: 0,
+      all: 2 * 1024 * 1024 * 1024,
+    });
   }
 }
