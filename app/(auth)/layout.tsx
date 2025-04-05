@@ -9,8 +9,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <Image
             src="/assets/icons/logo-full.svg"
             alt="logo"
-            width={224}
-            height={82}
+            width={184}
+            height={71}
             className="h-auto"
           />
 
@@ -23,8 +23,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <Image
             src="/assets/images/files.png"
             alt="Files"
-            width={342}
-            height={342}
+            width={284}
+            height={290}
             className="transition-all hover:rotate-2 hover:scale-105"
           />
         </div>
@@ -37,6 +37,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             alt="logo"
             width={224}
             height={82}
+            priority
             className="h-auto w-[200px] lg:w-[250px]"
           />
         </div>
